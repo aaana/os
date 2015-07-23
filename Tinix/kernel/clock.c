@@ -47,7 +47,7 @@ PUBLIC void clock_handler(int irq)
 	{
 		
 	}
-	p_proc_ready->state=kRUNNABLE;
+	p_proc_ready->state=kREADY;
 	
 	schedule();
 }

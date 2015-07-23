@@ -37,7 +37,6 @@ PUBLIC void clock_handler(int irq)
 	}
 	if (p_proc_ready->whichQueue==1)	//如果是第一个队列的，降到第二个队列
 	{	
-		printf("down");
 		p_proc_ready->whichQueue=2;
 		p_proc_ready->ticks=2;
 		secondQueue[secondLen]=p_proc_ready;

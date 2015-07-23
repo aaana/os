@@ -26,7 +26,7 @@ void initializeAllPro()	//重新初始化所有的进程，加入到不同的进程优先级队列中
 	for (i=0; i<NR_TASKS+NR_PROCS; i++)
 	{
 		p=&proc_table[i]; 
-		if (p->state!=kRUNNABLE) continue;
+		if (p->state!=kREADY) continue;
 		if (p->priority>=10)
 		{
 			firstQueue[firstLen]=p;
@@ -66,10 +66,10 @@ PUBLIC void schedule()
 		}
 		else						//第二个队列按照优先级
 		{
-			for (i=0; i<secondLen; i++)		//第二个队列增设判断是否为runnable状态
+			for (i=0; i<secondLen; i++)		//第二个队列增设判断是否为ready状态
 			{
 				p=secondQueue[i];
-				if (p->state!=kRUNNABLE || p->ticks==0) continue;
+				if (p->state!=kREADY || p->ticks==0) continue;
 				if (p->ticks > greatest_priority) 
 				{
 					greatest_priority = p->ticks;

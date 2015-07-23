@@ -39,7 +39,7 @@ void strlwr(char *str)
 
 void addToQueue(PROCESS* p)
 {
-	p->state=kRUNNABLE;
+	p->state=kREADY;
 	if (p->priority>=10)
 	{
 		firstQueue[firstLen]=p;
@@ -129,7 +129,7 @@ delay(10);
 		selector_ldt += 1 << 3;
 	}
 
-	//修改这里的优先级和ticks
+	//设置各进程的优先级
 	proc_table[0].priority = 15;
 	proc_table[1].priority =  5;
 	proc_table[2].priority =  5;
@@ -175,15 +175,15 @@ void clearScreen()
 	disp_pos=0;
 }
 
-
 void help()
 {
-	printf("           *////////////////////////////////////////////*/\n");
-	printf("                 design by Kang Huilin &&  Huang Anna         \n");
-	printf("           *////////////////////////////////////////////*/\n");
+	printf("            *////////////////////////////////////////////*/\n");
+	printf("                  Design by Kang Huilin &&  Huang Anna     \n");
+        printf("                         2015.7.20-2015.7.24               \n");
+	printf("            *////////////////////////////////////////////*/\n");
 	printf("\n");
 	printf("      *////////////////////////////////////////////////////////*\n");
-	printf("      *////  help         --------  shwo the help menu     ////*\n");
+	printf("      *////  help         --------  show the help menu     ////*\n");
 	printf("      *////  clear        --------  clear screen           ////*\n");
 	printf("      *////  alt+F2       --------  show the process run   ////*\n");
 	//printf("      *////  alt+F3       --------  goBang game            ////*\n");
@@ -205,17 +205,18 @@ void show()
 		printf("process%d:",p->pid);
 		switch (p->state)
 		{
-		case kRUNNABLE:
-			printf("    Runnable\n");
+		case kREADY:
+			printf("    Ready\n");
 			break;
 		case kRUNNING:
 			printf("    Running\n");
 			break;
-		case kREADY:
-			printf("    Ready\n");
+		case kWAIT:
+			printf("    Wait\n");
 			break;
 		}
 	}
+        printf("\n");
 }
 
 void readOneStringAndOneNumber(char* command,char* str,int* number)
@@ -271,7 +272,28 @@ void dealWithCommand(char* command)
 	{
 		if (number<0 || number>NR_TASKS+NR_PROCS)
 		{
-			printf("No found this process!!");
+			printf("Did not find this process!!\n");
+		}
+		else if (number==0 || number==6)
+		{
+			printf("You do not have sufficient privileges\n");
+		}
+                else if(number==1){
+                        printf("Sorry!Can not kill process 1\n");
+                }
+		else if (2<=number && number <=5)
+		{
+			proc_table[number].state=kWAIT;
+			printf("kill process %d successful\n",number);
+		}
+                printf("\n");
+		return ;
+	}
+	if (strcmp(str,"start")==0)
+	{
+		if (number<0 || number>NR_TASKS+NR_PROCS)
+		{
+			printf("Did not find this process!!\n");
 		}
 		else if (number==0 || number==6)
 		{
@@ -280,28 +302,12 @@ void dealWithCommand(char* command)
 		else if (2<=number && number <=5)
 		{
 			proc_table[number].state=kREADY;
-			printf("kill process %d successful\n",number);
-		}
-		return ;
-	}
-	if (strcmp(str,"start")==0)
-	{
-		if (number<0 || number>NR_TASKS+NR_PROCS)
-		{
-			printf("No found this process!!");
-		}
-		else if (number==0 || number==6)
-		{
-			printf("You do not have sufficient privileges\n");
-		}
-		else if (2<=number && number <=5)
-		{
-			proc_table[number].state=kRUNNABLE;
 			printf("start process %d successful\n",number);
 		}
+                printf("\n");	
 		return ;
 	}
-	printf("can not find this command\n");
+	printf("Invalid Command\n");
 }
 
 /*======================================================================*
@@ -313,7 +319,7 @@ void Terminal()
 	p_tty->startScanf=0;
 	while(1)
 	{
-		printf("DB=>");
+		printf("Tinix$:");
 		//printf("<Ticks:%x>", get_ticks());
 		openStartScanf(p_tty);
 		while (p_tty->startScanf) ;
@@ -347,7 +353,9 @@ void TestC()
 		milli_delay(1000);
 	}
 }
-
+/*======================================================================*
+                               TestD
+ *======================================================================*/
 void TestD()
 {
 	int i=0;
@@ -357,7 +365,9 @@ void TestD()
 		milli_delay(1000);
 	}
 }
-
+/*======================================================================*
+                               TestE
+ *======================================================================*/
 void TestE()
 {
 	int i=0;
@@ -370,15 +380,17 @@ void TestE()
 
 /*======================================================================*
 				goBangGame
-*=======================================================================
-char gameMap[15][15];
+*=======================================================================*/
+//char gameMap[15][15];
 TTY *goBangGameTty=tty_table+2;
 
-void readTwoNumber(int* x,int* y)
+
+void readTwoNumber(int* x,int* y,int *z)
 {
 	int i=0;
 	*x=0;
 	*y=0;
+        *z=0;
 	for (i=0; i<goBangGameTty->len && goBangGameTty->str[i]==' '; i++);
 	for (; i<goBangGameTty->len && goBangGameTty->str[i]!=' '  && goBangGameTty->str[i]!='\n'; i++)
 	{
@@ -389,8 +401,76 @@ void readTwoNumber(int* x,int* y)
 	{
 		*y=(*y)*10+(int) goBangGameTty->str[i]-48;
 	}
+for (i; i<goBangGameTty->len && goBangGameTty->str[i]==' '; i++);
+	for (; i<goBangGameTty->len && goBangGameTty->str[i]!=' ' && goBangGameTty->str[i]!='\n'; i++)
+	{
+		*z=(*z)*10+(int) goBangGameTty->str[i]-48;
+	}
 }
 
+void goBangGameStart(){
+//TTY *goBangGameTty=tty_table+2;
+int a[3];
+int t=0;
+int key=4;
+int b[3];
+
+int c[3]={0,0,0};
+a[0]=sys_get_ticks()%10;
+a[1]=a[0];
+a[2]=a[0];
+while(a[1]==a[0])
+   a[1]=(a[1]*sys_get_ticks()+7)%10;
+while(a[2]==a[0]||a[2]==a[1])
+{
+   a[2]=(a[0]+a[1]+t)%10;
+   t++;
+}
+printf("%d %d %d\n",a[0],a[1],a[2]);	
+printf("\n");
+while(1){
+
+printf("Guess:");
+int m,n,y;
+openStartScanf(goBangGameTty);
+	while (goBangGameTty->startScanf) ;
+readTwoNumber(&m,&n,&y);
+b[0]=m;
+b[1]=n;
+b[2]=y;
+if(b[0]==a[0])
+      {printf("     Y");
+          c[0]=1;}
+else if (b[0]==a[1]||b[0]==a[2])
+       printf("      ?");
+else printf("     N");
+ 
+if(b[1]==a[1])
+     {printf("Y");
+          c[1]=1;}
+else if (b[1]==a[0]||b[1]==a[2])
+       printf(" ?");
+else printf("N");
+if(b[2]==a[2])
+      {printf("Y");
+          c[2]=1;}
+else if (b[2]==a[1]||b[2]==a[0])
+       printf(" ?");
+else printf("N");
+printf("\n");
+
+if(c[0]==1&&c[1]==1&&c[2]==1){
+printf("YOU WIN !!\n");
+}
+key --;
+
+if(key==0){
+printf("YOU LOSE!!\n");
+}
+}
+
+}
+/*
 int max(int x,int y)
 {
 	return x>y?x:y;

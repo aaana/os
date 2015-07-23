@@ -51,8 +51,22 @@ PUBLIC void init_screen(TTY* p_tty)
 		disp_pos = 0;
 	}
 	else {
+		out_char(p_tty->p_console, 'H');
+                out_char(p_tty->p_console, 'E');
+                out_char(p_tty->p_console, 'L');
+                out_char(p_tty->p_console, 'L');
+                out_char(p_tty->p_console, 'O');
+                out_char(p_tty->p_console, ',');
+                out_char(p_tty->p_console, 'C');
+                out_char(p_tty->p_console, 'O');
+                out_char(p_tty->p_console, 'N');
+                out_char(p_tty->p_console, 'S');
+                out_char(p_tty->p_console, 'O');
+                out_char(p_tty->p_console, 'L');
+                out_char(p_tty->p_console, 'E');
+                out_char(p_tty->p_console, '#');
 		out_char(p_tty->p_console, nr_tty + '0');
-		out_char(p_tty->p_console, '#');
+                out_char(p_tty->p_console, '\n');
 	}
 
 	set_cursor(p_tty->p_console->cursor);
