@@ -46,7 +46,6 @@ LABEL_START:
 
 	mov	dh, 0			; "Booting  "
 	call	DispStr			; ÏÔÊ¾×Ö·û´®
-
 	
 	xor	ah, ah	; ©·
 	xor	dl, dl	; ©Ç ÈíÇý¸´Î»

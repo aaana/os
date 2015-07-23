@@ -55,13 +55,13 @@ realclean :
 disasm :
 	$(DASM) $(DASMFLAGS) $(TINIXKERNEL) > $(DASMOUTPUT)
 
-# Write "boot.bin" & "loader.bin" into floppy image "TINIX.IMG"
-# We assume that "TINIX.IMG" exists in current folder
+# Write "boot.bin" & "loader.bin" into floppy image "a.img"
+# We assume that "a.img" exists in current folder
 buildimg :
-	mount a.IMG /tmp/Tinix -o loop
-	cp -f boot/loader.bin /tmp/Tinix/
-	cp -f kernel.bin /tmp/Tinix
-	umount  /tmp/Tinix
+	mount a.img /usr/Tinix -o loop
+	cp -f boot/loader.bin /usr/Tinix/
+	cp -f kernel.bin /usr/Tinix
+	umount  /usr/Tinix
 
 boot/boot.bin : boot/boot.asm boot/include/load.inc boot/include/fat12hdr.inc
 	$(ASM) $(ASMBFLAGS) -o $@ $<

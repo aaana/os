@@ -39,7 +39,7 @@ void strlwr(char *str)
 
 void addToQueue(PROCESS* p)
 {
-	p->state=kREADY;
+	p->state=kRUNNABLE;
 	if (p->priority>=10)
 	{
 		firstQueue[firstLen]=p;
@@ -175,15 +175,15 @@ void clearScreen()
 	disp_pos=0;
 }
 
+
 void help()
 {
-	printf("            *////////////////////////////////////////////*/\n");
-	printf("                  Design by Kang Huilin &&  Huang Anna     \n");
-        printf("                         2015.7.20-2015.7.24               \n");
-	printf("            *////////////////////////////////////////////*/\n");
+	printf("           *////////////////////////////////////////////*/\n");
+	printf("                 design by Kang Huilin &&  Huang Anna         \n");
+	printf("           *////////////////////////////////////////////*/\n");
 	printf("\n");
 	printf("      *////////////////////////////////////////////////////////*\n");
-	printf("      *////  help         --------  show the help menu     ////*\n");
+	printf("      *////  help         --------  shwo the help menu     ////*\n");
 	printf("      *////  clear        --------  clear screen           ////*\n");
 	printf("      *////  alt+F2       --------  show the process run   ////*\n");
 	//printf("      *////  alt+F3       --------  goBang game            ////*\n");
@@ -205,14 +205,14 @@ void show()
 		printf("process%d:",p->pid);
 		switch (p->state)
 		{
-		case kREADY:
-			printf("    Ready\n");
+		case kRUNNABLE:
+			printf("    Runnable\n");
 			break;
 		case kRUNNING:
 			printf("    Running\n");
 			break;
-		case kWAIT:
-			printf("    Wait\n");
+		case kREADY:
+			printf("    Ready\n");
 			break;
 		}
 	}
@@ -271,18 +271,15 @@ void dealWithCommand(char* command)
 	{
 		if (number<0 || number>NR_TASKS+NR_PROCS)
 		{
-			printf("Did not find this process!!");
+			printf("No found this process!!");
 		}
 		else if (number==0 || number==6)
 		{
 			printf("You do not have sufficient privileges\n");
 		}
-else if(number==1){
-printf("Sorry!Can not kill process 1");
-}
 		else if (2<=number && number <=5)
 		{
-			proc_table[number].state=kWAIT;
+			proc_table[number].state=kREADY;
 			printf("kill process %d successful\n",number);
 		}
 		return ;
@@ -299,7 +296,7 @@ printf("Sorry!Can not kill process 1");
 		}
 		else if (2<=number && number <=5)
 		{
-			proc_table[number].state=kREADY;
+			proc_table[number].state=kRUNNABLE;
 			printf("start process %d successful\n",number);
 		}
 		return ;
@@ -316,7 +313,7 @@ void Terminal()
 	p_tty->startScanf=0;
 	while(1)
 	{
-		printf("$Tinix=>");
+		printf("DB=>");
 		//printf("<Ticks:%x>", get_ticks());
 		openStartScanf(p_tty);
 		while (p_tty->startScanf) ;
@@ -332,7 +329,7 @@ void TestB()
 {
 	int i = 0;
 	while(1){
-		printf("hahah");
+		printf("B");
 		milli_delay(1000);
 	}
 }
