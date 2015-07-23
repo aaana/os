@@ -46,7 +46,8 @@ LABEL_START:
 
 	mov	dh, 0			; "Booting  "
 	call	DispStr			; 显示字符串
-
+call	DispStr			; 显示字符串
+call	DispStr			; 显示字符串
 	
 	xor	ah, ah	; ┓
 	xor	dl, dl	; ┣ 软驱复位

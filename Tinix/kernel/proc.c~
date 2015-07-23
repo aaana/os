@@ -69,7 +69,7 @@ PUBLIC void schedule()
 			for (i=0; i<secondLen; i++)		//第二个队列增设判断是否为ready状态
 			{
 				p=secondQueue[i];
-				if (p->state!=kREADY || p->ticks==0) continue;
+				if (p->state!=kReady || p->ticks==0) continue;
 				if (p->ticks > greatest_priority) 
 				{
 					greatest_priority = p->ticks;

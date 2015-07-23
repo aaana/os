@@ -316,7 +316,7 @@ void Terminal()
 	p_tty->startScanf=0;
 	while(1)
 	{
-		printf("$Tinix=>");
+		printf("DB=>");
 		//printf("<Ticks:%x>", get_ticks());
 		openStartScanf(p_tty);
 		while (p_tty->startScanf) ;
