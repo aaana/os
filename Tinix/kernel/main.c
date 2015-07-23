@@ -137,6 +137,8 @@ delay(10);
 	proc_table[4].priority =  7;
 	proc_table[5].priority =  10;
 	proc_table[6].priority =  10;
+        proc_table[7].priority =  10;
+        proc_table[8].priority =  10;
 
 	//对优先队列初始化
 	firstLen=firstHead=secondLen=0;
@@ -151,6 +153,8 @@ delay(10);
 	proc_table[4].nr_tty = 1;
 	proc_table[5].nr_tty = 1;
 	proc_table[6].nr_tty = 2;
+        proc_table[7].nr_tty = 3;
+        proc_table[8].nr_tty = 4;
 
 	k_reenter	= 0;
 	ticks		= 0;
@@ -377,100 +381,271 @@ void TestE()
 		milli_delay(1000);
 	}
 }
-
 /*======================================================================*
-				goBangGame
+                                guess
 *=======================================================================*/
-//char gameMap[15][15];
-TTY *goBangGameTty=tty_table+2;
-
-
-void readTwoNumber(int* x,int* y,int *z)
+TTY *guessTty=tty_table+3;
+void readThreeNumbers(int* x,int* y,int *z)
 {
 	int i=0;
 	*x=0;
 	*y=0;
         *z=0;
-	for (i=0; i<goBangGameTty->len && goBangGameTty->str[i]==' '; i++);
-	for (; i<goBangGameTty->len && goBangGameTty->str[i]!=' '  && goBangGameTty->str[i]!='\n'; i++)
+	for (i=0; i<guessTty->len && guessTty->str[i]==' '; i++);
+	for (; i<guessTty->len && guessTty->str[i]!=' '  && guessTty->str[i]!='\n'; i++)
 	{
-		*x=(*x)*10+(int) goBangGameTty->str[i]-48;
+		*x=(*x)*10+(int) guessTty->str[i]-48;
 	}
-	for (i; i<goBangGameTty->len && goBangGameTty->str[i]==' '; i++);
-	for (; i<goBangGameTty->len && goBangGameTty->str[i]!=' ' && goBangGameTty->str[i]!='\n'; i++)
+	for (i; i<guessTty->len && guessTty->str[i]==' '; i++);
+	for (; i<guessTty->len && guessTty->str[i]!=' ' && guessTty->str[i]!='\n'; i++)
 	{
-		*y=(*y)*10+(int) goBangGameTty->str[i]-48;
+		*y=(*y)*10+(int) guessTty->str[i]-48;
 	}
-for (i; i<goBangGameTty->len && goBangGameTty->str[i]==' '; i++);
-	for (; i<goBangGameTty->len && goBangGameTty->str[i]!=' ' && goBangGameTty->str[i]!='\n'; i++)
+for (i; i<guessTty->len && guessTty->str[i]==' '; i++);
+	for (; i<guessTty->len && guessTty->str[i]!=' ' && guessTty->str[i]!='\n'; i++)
 	{
-		*z=(*z)*10+(int) goBangGameTty->str[i]-48;
+		*z=(*z)*10+(int) guessTty->str[i]-48;
 	}
 }
 
-void goBangGameStart(){
-//TTY *goBangGameTty=tty_table+2;
-int a[3];
-int t=0;
-int key=4;
-int b[3];
+void guess(){
 
-int c[3]={0,0,0};
-a[0]=sys_get_ticks()%10;
-a[1]=a[0];
-a[2]=a[0];
-while(a[1]==a[0])
-   a[1]=(a[1]*sys_get_ticks()+7)%10;
-while(a[2]==a[0]||a[2]==a[1])
-{
-   a[2]=(a[0]+a[1]+t)%10;
-   t++;
-}
-printf("%d %d %d\n",a[0],a[1],a[2]);	
-printf("\n");
-while(1){
+      int a[3];
+      int b[3];
+     
+      while(1)
+     {
+      int t=0; 
+      int key=4;
+      int c[3]={0,0,0};
+      a[0]=sys_get_ticks()%10;
+      a[1]=a[0];
+      a[2]=a[0];
+      while(a[1]==a[0])
+          a[1]=(a[1]*sys_get_ticks()+7)%10;
+      while(a[2]==a[0]||a[2]==a[1])
+        {
+           a[2]=(a[0]+a[1]+t)%10;
+           t++;
+        }
+      //printf("%d %d %d\n",a[0],a[1],a[2]);	
+      printf("Ready?Guess!Guess!Guess!\n");
+      printf("\n");
+      while(1){
 
-printf("Guess:");
-int m,n,y;
-openStartScanf(goBangGameTty);
-	while (goBangGameTty->startScanf) ;
-readTwoNumber(&m,&n,&y);
-b[0]=m;
-b[1]=n;
-b[2]=y;
-if(b[0]==a[0])
-      {printf("     Y");
-          c[0]=1;}
-else if (b[0]==a[1]||b[0]==a[2])
-       printf("      ?");
-else printf("     N");
+          printf("Guess:");
+          int m,n,y;
+          openStartScanf(guessTty);
+	  while (guessTty->startScanf) ;
+          readThreeNumbers(&m,&n,&y);
+          b[0]=m;
+          b[1]=n;
+          b[2]=y;
+          if(b[0]==a[0])
+             {
+                printf("      Y");
+                c[0]=1;
+             }
+          else if (b[0]==a[1]||b[0]==a[2])
+               printf("      ?");
+          else printf("      N");
  
-if(b[1]==a[1])
-     {printf("Y");
-          c[1]=1;}
-else if (b[1]==a[0]||b[1]==a[2])
-       printf(" ?");
-else printf("N");
-if(b[2]==a[2])
-      {printf("Y");
-          c[2]=1;}
-else if (b[2]==a[1]||b[2]==a[0])
-       printf(" ?");
-else printf("N");
-printf("\n");
+          if(b[1]==a[1])
+             {
+                printf(" Y");
+                c[1]=1;
+             }
+          else if (b[1]==a[0]||b[1]==a[2])
+              printf(" ?");
+          else printf(" N");
+          if(b[2]==a[2])
+          {
+             printf(" Y");
+             c[2]=1;
+          }
+          else if (b[2]==a[1]||b[2]==a[0])
+              printf(" ?");
+          else printf(" N");
+          printf("\n");
 
-if(c[0]==1&&c[1]==1&&c[2]==1){
-printf("YOU WIN !!\n");
+          if(c[0]==1&&c[1]==1&&c[2]==1){
+              printf("YOU WIN !!\n");
+              break;
 }
 key --;
 
 if(key==0){
 printf("YOU LOSE!!\n");
+printf("Answer:");
+printf("%d %d %d\n",a[0],a[1],a[2]);
+printf("\n");
+break;
+}
 }
 }
 
 }
-/*
+void readTwoNumbers(int* x,int* y,TTY* tty)
+{
+	int i=0;
+	*x=0;
+	*y=0;
+	for (i=0; i<tty->len && tty->str[i]==' '; i++);
+	for (; i<tty->len && tty->str[i]!=' '  && tty->str[i]!='\n'; i++)
+	{
+		*x=(*x)*10+(int) tty->str[i]-48;
+	}
+	for (i; i<tty->len && tty->str[i]==' '; i++);
+	for (; i<tty->len && tty->str[i]!=' ' && tty->str[i]!='\n'; i++)
+	{
+		*y=(*y)*10+(int) tty->str[i]-48;
+	}
+for (i; i<tty->len && tty->str[i]==' '; i++);
+
+}
+
+/*=====================================================================*
+                                Calendar
+*======================================================================*/
+TTY *calendarTty=tty_table+4;
+int month1[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};//平年
+int month2[] = {0,31,29,31,30,31,30,31,31,30,31,30,31};//闰年
+
+/**
+判断平闰年,
+闰年：1
+平年：0
+*/
+
+/**
+计算每个月的第一天是星期几，以2000年1月1日星期6为标准。
+*/
+int CalculateMonth(int year,int month)
+{
+	int sumdays = 0;//用于计算总天数
+	int i = 0;
+
+	
+	
+	if(((year %4 == 0 && year %100 != 0) ||( year %400 == 0)))//计算某年中某月以前所有月的天数总合
+	{
+		for(i = 1; i <= month-1; i++)
+		{
+			sumdays += month2[i];
+		}
+	}
+	else
+	{
+		for(i = 1; i <= month-1; i++)
+		{
+			sumdays += month1[i];
+		}
+
+	}
+
+	for(i = 2000; i < year; i++)//计算2000年（含2000年）以后某年以前所有年份的天数总和
+	{
+		if(((i %4 == 0 && i %100 != 0) ||( i %400 == 0)))
+		{
+			sumdays += 366;
+		}
+		else
+		{
+			sumdays += 365;
+		}
+	}
+	if(sumdays%7 <= 1)//计算某年某月的第一一天是星期几
+	{
+		return sumdays%7+6;//由于标准是“2000年1月1日星期6”，因此，此处结果为星期6 或 星期日(7)
+	}
+	else
+	{
+		return sumdays%7-1;//返回某年某月的第一一天是星期几（1 到 5）
+	}
+}
+
+/**
+打印需要查询的月份的日历
+*/
+ void PrintMonth(int year,int month)
+{
+	int week = CalculateMonth(year,month);//记录要查询的月份的1号是星期几
+	int i;
+	int count = week-1;//记录周期，做为换行的标志。
+
+	if(year < 2000)//检查年份的合法性
+	{
+		printf("请输入2000年以后的年份！\n");
+		return;
+	}
+
+	printf("\t.-------- ----------------.\n");
+	printf("\t|     %d 年 %d 月日历     |\n",year,month);
+	printf("\t.---  --------------------.\n");
+	printf("\t 一  二  三  四  五  六  日\n");
+	printf("\t");
+
+	for(i = 1; i < week; i++)//打印1号前的空格
+	{
+		printf("    ");
+	}
+
+	if(((year %4 == 0 && year %100 != 0) ||( year %400 == 0)))//由于平闰年的二月有差别所以要先鉴定年份，再确定月份
+	{
+		for(i = 1; i <= month2[month]; i++)//闰年
+		{
+			if(count == 7)
+			{
+				printf("\n");
+				printf("\t");//保证对齐
+				count = 0;//注意换行清零
+			}
+			printf(" %2d ",i);//控制格式并对其
+			count++;
+		}
+	}
+	else
+	{
+		for(i = 1; i <= month1[month]; i++)
+		{
+			if(count == 7)
+			{
+				printf("\n");
+				printf("\t");
+				count = 0;
+			}
+			printf(" %2d ",i);
+			count++;
+		}
+	}
+	printf("\n\n");
+}
+
+ void calendar(void)
+ {
+	 int year;
+	 int month;
+
+	 printf("请输入您要查询的年月:");
+
+	 while(1)
+         {
+                 openStartScanf(calendarTty);
+		 while (calendarTty->startScanf) ;
+		 readTwoNumbers(&year,&month,calendarTty);
+		 PrintMonth(year,month);
+		 printf("请输入您要查询的年月:");
+	 }
+ }
+/*======================================================================*
+				goBangGame
+*=======================================================================*/
+char gameMap[15][15];
+TTY *goBangGameTty=tty_table+2;
+
+
+
+
 int max(int x,int y)
 {
 	return x>y?x:y;
@@ -826,10 +1001,9 @@ void goBangGameStart()
 		while (1)
 		{
 			printf("[player step:%d]",++playerStep);
-			//scanf("%d%d",&x,&y);
 			openStartScanf(goBangGameTty);
 			while (goBangGameTty->startScanf) ;
-			readTwoNumber(&x,&y);
+			readTwoNumbers(&x,&y,goBangGameTty);
 			x--,y--;
 			if ( checkParameter(x,y) )
 			{
@@ -873,6 +1047,6 @@ void goBangGameStart()
 	}
 	}
 
-}*/
+}
 
 

@@ -25,7 +25,9 @@ PUBLIC	TASK	user_proc_table[NR_PROCS] = {	{Terminal, STACK_SIZE_TERMINAL, "Termi
 						{TestC, STACK_SIZE_TESTC, "TestC"},
 						{TestD, STACK_SIZE_TESTD, "TestD"},
 						{TestE, STACK_SIZE_TESTE, "TestE"},
-						{goBangGameStart,STACK_SIZE_GOBANGGAMESTART,"GoBangGame"}};
+						{goBangGameStart,STACK_SIZE_GOBANGGAMESTART,"GoBangGame"},
+                                                {guess,STACK_SIZE_GUESS,"Guess"},
+{calendar,STACK_SIZE_CALENDAR,"Calendar"}};
 
 PUBLIC	char	task_stack[STACK_SIZE_TOTAL];
 
